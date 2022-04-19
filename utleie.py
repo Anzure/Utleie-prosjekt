@@ -1,5 +1,6 @@
 import mysql.connector
 import tkinter as tk
+import numpy as np
 
 print("Connecting to database...")
 database = mysql.connector.connect(
@@ -11,7 +12,15 @@ database = mysql.connector.connect(
 )
 print("Connected to database.")
 
-components = ["one", "two", "three"]
+print("Loading all data...")
+cursor = database.cursor()
+cursor.execute("SELECT Navn FROM komponenter")
+cursor = cursor.fetchall()
+components = []
+for element in np.array(cursor):
+    components.append(element[0])
+cursor = cursor.clear()
+print("Loaded all data.")
 
 def focus1(event):
     course_field.focus_set()
