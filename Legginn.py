@@ -1,13 +1,16 @@
 import mysql.connector
 import tkinter as tk
+from tkinter import *
+import tkinter.messagebox as MessageBox
+
 
 print("Connecting to database...")
 database = mysql.connector.connect(
     host="localhost",
     port=3306,
     user="root",
-    password="*********",
-    database="***********",
+    password="WifiKoster100KrMB",
+    database="utleie",
 )
 print("Connected to database.")
 
@@ -26,9 +29,38 @@ mycursor.execute(
 print("Execution complete")
 
 
-# Tenkt modell for funksjoner som skal hente info fra gui
-# def nyKompNavn():
-#    NyKomp = navn.get()
+def insert():
+    knavn = in_knavn.get()
+    kAnt = in_kAnt.get()
+
+    if knavn == "" or kAnt == "":
+        MessageBox.showinfo("Fyll alle felt")
+    else:
+        mycursor.execute("INSERT INTO komponenter(Navn) VALUES ('" + knavn + "')")
+        mycursor.execute("commit")
+
+        MessageBox.showinfo("Komponent registrert")
+        database.close()
 
 
-nykomp = "INSERT INTO Komponenter (Navn) VALUER (%s)"  # Grunnlag for kommando som skal legge inn nytt komponent. ID har autoinc og ordner seg selv.
+root = Tk()
+root.configure(background="dark green")
+root.geometry("600x300")
+root.title("Registrer ny komponent")
+
+knavn = Label(root, text="Komponentnavn", font=("bold", 10), bg="dark green")
+knavn.place(x=30, y=50)
+
+kAnt = Label(root, text="Antall enheter: ", font=("bold", 10), bg="dark green")
+kAnt.place(x=30, y=80)
+
+in_knavn = Entry()
+in_knavn.place(x=160, y=50)
+
+in_kAnt = Entry()
+in_kAnt.place(x=160, y=80)
+
+submit = tk.Button(root, text="Registrer", fg="Black", bg="Grey", command=insert)
+submit.place(x=90, y=200)
+
+root.mainloop()
