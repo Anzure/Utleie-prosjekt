@@ -100,8 +100,8 @@ def insert():
         email_field.get() == "" and
         component_field.get() == "" and
         deadline_field.get() == ""):
-             
-        print("empty input")
+
+        messagebox.showwarning("Mangler inndata", "Vennligst fyll ut alle felt")
  
     else:
         
@@ -113,13 +113,11 @@ def insert():
         cursor = cursor.clear()
 
         if (amount <= 0):
-            messagebox.showerror("Tomt", "Ikke på lager")
+            messagebox.showerror("Tomt på lager", "Det er ikke flere komponenter på lager")
 
         else:
-            print(name_field.get(), phone_field.get(), email_field.get())
             user_id = int(create_or_get_user(name_field.get(), phone_field.get(), email_field.get()))
             component_id = int(get_component(component_name.get()))
-            print(user_id, amount, component_id)
             update_component(component_id=str(component_id), amount=str(amount-1))
             create_borrow(component_id=str(component_id), user_id=str(user_id))
             name_field.focus_set()
