@@ -20,7 +20,7 @@ cursor = database.cursor()
 cursor.execute("SELECT * FROM komponenter")
 cursor = cursor.fetchall()
 components = np.array(cursor)
-component_names = ["*"]
+component_names = []
 for component in components:
     component_names.append(component[1])
 cursor = cursor.clear()
