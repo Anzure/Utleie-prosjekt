@@ -109,7 +109,6 @@ def insert():
         cursor.execute("SELECT Beholdning FROM komponenter WHERE Navn LIKE '" + component_name.get() + "'")
         cursor = cursor.fetchall()
         amount = int(np.array(cursor)[0])
-        print(amount)
         cursor = cursor.clear()
 
         if (amount <= 0):
