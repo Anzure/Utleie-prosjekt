@@ -9,8 +9,8 @@ database = mysql.connector.connect(
     host="localhost",
     port=3306,
     user="root",
-    password="WifiKoster100KrMB",
-    database="utleie",
+    password="***************",
+    database="**************",
 )
 print("Connected to database.")
 
