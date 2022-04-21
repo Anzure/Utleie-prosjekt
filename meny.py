@@ -3,7 +3,7 @@ import tkinter as tk
 root = tk.Tk()
 root.configure(background='dark green')
 root.title("Meny")
-root.geometry("500x300")
+root.geometry("500x250")
 
 heading = tk.Label(root, text="Meny", bg="dark green")
 heading.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
