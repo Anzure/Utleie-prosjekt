@@ -124,6 +124,7 @@ def insert():
             create_borrow(component_id=str(component_id), user_id=str(user_id))
             name_field.focus_set()
             clear()
+            messagebox.showinfo("Suksess", "Utleie registrert")
 
 
 if __name__ == "__main__":
