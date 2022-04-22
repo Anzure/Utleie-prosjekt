@@ -16,7 +16,7 @@ print("Connected to database.")
 
 print("Loading all data...")
 cursor = database.cursor()
-cursor.execute("SELECT * FROM komponenter")
+cursor.execute("SELECT * FROM komponent")
 cursor = cursor.fetchall()
 components = np.array(cursor)
 component_names = []
@@ -49,7 +49,7 @@ def clear():
 
 def get_user(email):
     cursor = database.cursor()
-    cursor.execute("SELECT `Låner ID` FROM låner WHERE `E-post` LIKE '" + email + "'")
+    cursor.execute("SELECT id FROM bruker WHERE epost LIKE '" + email + "'")
     cursor = cursor.fetchall()
     users = np.array(cursor)
     if (len(users) > 0):
@@ -61,7 +61,7 @@ def get_user(email):
 
 def get_component(name):
     cursor = database.cursor()
-    cursor.execute("SELECT `Komponent ID` FROM komponenter WHERE Navn LIKE '" + name + "'")
+    cursor.execute("SELECT id FROM komponent WHERE navn LIKE '" + name + "'")
     cursor = cursor.fetchall()
     elements = np.array(cursor)
     if (len(elements) > 0):
@@ -73,7 +73,7 @@ def get_component(name):
 
 def create_user(name, phone, email):
     cursor = database.cursor()
-    cursor.execute("INSERT INTO låner (`Navn`, `Mobilnummer`, `E-post`) VALUES ('" + name + "', '" + phone + "', '" + email + "')")
+    cursor.execute("INSERT INTO bruker (navn, telefon, epost) VALUES ('" + name + "', '" + phone + "', '" + email + "')")
     database.commit()
 
 def create_or_get_user(name, phone, email):
@@ -85,12 +85,12 @@ def create_or_get_user(name, phone, email):
 
 def create_borrow(component_id, user_id):
     cursor = database.cursor()
-    cursor.execute("INSERT INTO lån (`Komponenter_Komponent ID`, `Låner_Låner ID`) VALUES ('" + component_id + "', '" + user_id + "')")
+    cursor.execute("INSERT INTO leie (komponent_id, bruker_id) VALUES ('" + component_id + "', '" + user_id + "')")
     database.commit()
 
 def update_component(component_id, amount):
     cursor = database.cursor()
-    cursor.execute("UPDATE komponenter SET `Beholdning` = " + amount + " WHERE `Komponent ID` LIKE " + component_id + "")
+    cursor.execute("UPDATE komponent SET beholdning = " + amount + " WHERE id LIKE " + component_id + "")
     database.commit()
 
 def insert():
@@ -106,7 +106,7 @@ def insert():
     else:
         
         cursor = database.cursor()
-        cursor.execute("SELECT Beholdning FROM komponenter WHERE Navn LIKE '" + component_name.get() + "'")
+        cursor.execute("SELECT beholdning FROM komponent WHERE navn LIKE '" + component_name.get() + "'")
         cursor = cursor.fetchall()
         amount = int(np.array(cursor)[0])
         cursor = cursor.clear()
@@ -132,7 +132,7 @@ def add_component():
             title="Feil", message="Fyll alle felt. Antall må være 1 eller fler")
     else:
         cursor.execute(
-            "INSERT INTO komponenter(Navn, Beholdning) VALUES ('" + knavn + "','" + kAnt + "')")
+            "INSERT INTO komponent (navn, beholdning) VALUES ('" + knavn + "','" + kAnt + "')")
         cursor.execute("commit")
         messagebox.showinfo(title="Info", message="Komponent registrert")
 
