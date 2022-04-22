@@ -14,16 +14,19 @@ database = mysql.connector.connect(
 )
 print("Connected to database.")
 
-print("Loading all data...")
-cursor = database.cursor()
-cursor.execute("SELECT * FROM komponent")
-cursor = cursor.fetchall()
-components = np.array(cursor)
-component_names = []
-for component in components:
-    component_names.append(component[1])
-cursor = cursor.clear()
-print("Loaded all data.")
+def load_components():
+    print("Loading all data...")
+    cursor = database.cursor()
+    cursor.execute("SELECT * FROM komponent")
+    cursor = cursor.fetchall()
+    global components
+    components = np.array(cursor)
+    global component_names
+    component_names = []
+    for component in components:
+        component_names.append(component[1])
+    cursor = cursor.clear()
+    print("Loaded all data.")
 
 def focus1(event):
     name_field.focus_set()
@@ -138,19 +141,20 @@ def insert_component():
 
 def close_rental_window():
     root.deiconify()
-    rental.withdraw()
+    rental.destroy()
     
 def open_rental_window():
+    load_components()
+    contruct_rental()
     root.withdraw()
-    rental.deiconify()
 
 def close_register_window():
     root.deiconify()
-    register.withdraw()
+    register.destroy()
     
 def open_register_window():
+    construct_register()
     root.withdraw()
-    register.deiconify()
 
 def contruct_rental():
     global rental
@@ -204,7 +208,6 @@ def contruct_rental():
     submit_borrow.grid(row=6, column=1)
 
     rental.protocol("WM_DELETE_WINDOW", close_rental_window)
-    rental.withdraw()
 
 def construct_register():
     global register
@@ -232,7 +235,6 @@ def construct_register():
     register_submit.place(x=90, y=200)
     
     register.protocol("WM_DELETE_WINDOW", close_register_window)
-    register.withdraw()
 
 if __name__ == "__main__":
 
@@ -248,9 +250,6 @@ if __name__ == "__main__":
     button2 = tk.Button(root, text="Legge til nytt komponent", fg="Black", bg="Grey", command=open_register_window)
     button1.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
     button2.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
-    
-    contruct_rental()
-    construct_register()
     
     root.mainloop()
     
