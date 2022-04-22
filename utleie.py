@@ -93,7 +93,7 @@ def update_component(component_id, amount):
     cursor.execute("UPDATE komponent SET beholdning = " + amount + " WHERE id LIKE " + component_id + "")
     database.commit()
 
-def insert():
+def insert_borrow():
     
     if (name_field.get() == "" and
         phone_field.get() == "" and
@@ -104,7 +104,6 @@ def insert():
         messagebox.showwarning("Mangler inndata", "Vennligst fyll ut alle felt")
  
     else:
-        
         cursor = database.cursor()
         cursor.execute("SELECT beholdning FROM komponent WHERE navn LIKE '" + component_name.get() + "'")
         cursor = cursor.fetchall()
@@ -123,7 +122,7 @@ def insert():
             clear()
             messagebox.showinfo("Suksess", "Utleie registrert")
 
-def add_component():
+def insert_component():
     knavn = in_knavn.get()
     kAnt = in_kAnt.get()
 
@@ -131,8 +130,8 @@ def add_component():
         messagebox.showinfo(
             title="Feil", message="Fyll alle felt. Antall må være 1 eller fler")
     else:
-        cursor.execute(
-            "INSERT INTO komponent (navn, beholdning) VALUES ('" + knavn + "','" + kAnt + "')")
+        cursor = database.cursor()
+        cursor.execute("INSERT INTO komponent (navn, beholdning) VALUES ('" + knavn + "'," + kAnt + ")")
         cursor.execute("commit")
         messagebox.showinfo(title="Info", message="Komponent registrert")
 
@@ -154,6 +153,8 @@ def open_register_window():
     register.deiconify()
 
 def contruct_rental():
+    global rental
+    rental = tk.Toplevel(root)
     rental.configure(background='dark green')
     rental.title("Registrer utlån")
     rental.geometry("500x250")
@@ -172,12 +173,18 @@ def contruct_rental():
     component_label.grid(row=4, column=0)
     deadline_label.grid(row=5, column=0)
     
+    global name_field
     name_field = tk.Entry(rental)
+    global phone_field
     phone_field = tk.Entry(rental)
+    global email_field
     email_field = tk.Entry(rental)
+    global component_name
     component_name = tk.StringVar(rental)
     component_name.set(component_names[0])
+    global component_field
     component_field = tk.OptionMenu(rental, component_name, *component_names)
+    global deadline_field
     deadline_field = tk.Entry(rental)
 
     name_field.bind("<Return>", focus1)
@@ -192,14 +199,16 @@ def contruct_rental():
     component_field.grid(row=4, column=1, ipadx="100")
     deadline_field.grid(row=5, column=1, ipadx="100")
     
-    submit = tk.Button(rental, text="Registrer utlån", fg="Black",
-                            bg="Grey", command=insert)
-    submit.grid(row=6, column=1)
+    submit_borrow = tk.Button(rental, text="Registrer utlån", fg="Black",
+                            bg="Grey", command=insert_borrow)
+    submit_borrow.grid(row=6, column=1)
 
     rental.protocol("WM_DELETE_WINDOW", close_rental_window)
     rental.withdraw()
 
 def construct_register():
+    global register
+    register = tk.Toplevel(root)
     register.configure(background="dark green")
     register.geometry("600x300")
     register.title("Registrer ny komponent")
@@ -210,14 +219,16 @@ def construct_register():
     kAnt = tk.Label(register, text="Antall enheter: ", font=("bold", 10), bg="dark green")
     kAnt.place(x=30, y=80)
 
+    global in_knavn
     in_knavn = tk.Entry(register)
     in_knavn.place(x=160, y=50)
 
+    global in_kAnt
     in_kAnt = tk.Entry(register)
     in_kAnt.place(x=160, y=80)
 
     register_submit = tk.Button(register, text="Registrer", fg="Black",
-                    bg="Grey", command=insert)
+                    bg="Grey", command=insert_component)
     register_submit.place(x=90, y=200)
     
     register.protocol("WM_DELETE_WINDOW", close_register_window)
@@ -237,9 +248,7 @@ if __name__ == "__main__":
     button2 = tk.Button(root, text="Legge til nytt komponent", fg="Black", bg="Grey", command=open_register_window)
     button1.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
     button2.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
-
-    rental = tk.Toplevel(root)
-    register = tk.Toplevel(root)
+    
     contruct_rental()
     construct_register()
     
