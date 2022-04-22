@@ -23,7 +23,7 @@ mycursor.execute(
     "CREATE TABLE IF NOT EXISTS Lån (idLån int auto_increment PRIMARY KEY NOT NULL, komponentID int, LånerID int)"
 )
 mycursor.execute(
-    "CREATE TABLE IF NOT EXISTS Leier (LånerID int auto_increment PRIMARY KEY NOT NULL, Navn varchar(45), Utlånsdato date, leveringsfrist date, Epost varchar(45), TLF int)"
+    "CREATE TABLE IF NOT EXISTS Låner (LånerID int auto_increment PRIMARY KEY NOT NULL, Navn varchar(45), Utlånsdato date, leveringsfrist date, Epost varchar(45), TLF int)"
 )
 
 print("Execution complete")
@@ -33,14 +33,15 @@ def insert():
     knavn = in_knavn.get()
     kAnt = in_kAnt.get()
 
-    if knavn == "" or kAnt == "":
-        MessageBox.showinfo("Fyll alle felt")
+    if knavn == "" or kAnt == "" or kAnt == "0":
+        MessageBox.showinfo(
+            title="Feil", message="Fyll alle felt. Antall må være 1 eller fler")
     else:
-        mycursor.execute("INSERT INTO komponenter(Navn) VALUES ('" + knavn + "')")
+        mycursor.execute(
+            "INSERT INTO komponenter(Navn, Beholdning) VALUES ('" + knavn + "','" + kAnt + "')")
         mycursor.execute("commit")
 
-        MessageBox.showinfo("Komponent registrert")
-        database.close()
+        MessageBox.showinfo(title="Info", message="Komponent registrert")
 
 
 root = Tk()
@@ -60,7 +61,8 @@ in_knavn.place(x=160, y=50)
 in_kAnt = Entry()
 in_kAnt.place(x=160, y=80)
 
-submit = tk.Button(root, text="Registrer", fg="Black", bg="Grey", command=insert)
+submit = tk.Button(root, text="Registrer", fg="Black",
+                   bg="Grey", command=insert)
 submit.place(x=90, y=200)
 
 root.mainloop()
